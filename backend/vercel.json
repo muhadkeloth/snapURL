@@ -5,14 +5,18 @@
         "src": "src/server.ts",
         "use": "@vercel/node",
         "config": {
-          "distDir": "dist" 
+          "distDir": "dist",
+          "includeFiles": ["dist/**"]
         }
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "dist/server.js" 
+        "dest": "dist/server.js"
       }
-    ]
+    ],
+    "hooks": {
+      "build": "npm run build" 
+    }
   }
