@@ -20,6 +20,7 @@ const Home = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [links, setLinks] = useState<ShortenedLink[]>([])
     const [isloading, setIsLoading] = useState(false);
+    const [isshorting, setIsshorting] = useState(false);
     const [deleteId, setDeleteId] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false)
   
@@ -36,7 +37,8 @@ const Home = () => {
         return;
       }
       try {
-      const response = await shortenURL(trimmedUrl);
+        setIsshorting(true);
+        const response = await shortenURL(trimmedUrl);
       if(response){
 
         await fetchAllUrls(currentPage)
@@ -46,6 +48,8 @@ const Home = () => {
     } catch (error) {
       const errorMessage = getErrorMessage(error)
       toast.error(`Failed to shorten URL ${errorMessage} `);
+    }finally{
+      setIsshorting(false)
     }
     };
 
@@ -120,7 +124,7 @@ const Home = () => {
                   className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center justify-center"
                 >
                   <Link2 className="h-5 w-5 mr-2" />
-                  Shorten
+                  {isshorting ? 'Shorting...' : 'Shorten'}
                 </button>
               </div>
             </form>
@@ -155,7 +159,14 @@ const Home = () => {
                           </div>
                           <p className="text-xs text-gray-400 mt-1">
                             Created on{" "}
-                            {new Date(link.createdAt).toLocaleDateString()}
+                            {new Date(link.createdAt).toLocaleString('en-GB', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true
+                            })}
                           </p>
                         </div>
                         <div className="flex items-center gap-4">
